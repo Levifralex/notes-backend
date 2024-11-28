@@ -91,6 +91,27 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end()
 })
 
+app.put('/api/notes/:id', (request, response) => {
+  const body = request.body
+  const id = Number(request.params.id)
+
+  if (!body.content) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    })
+  }
+
+  const noteUpdated = {
+    id: id,
+    content: body.content,
+    important: body.important,
+  }
+
+  notes = notes.map(note => note.id !== id ? note : noteUpdated)
+
+  response.json(noteUpdated)
+})
+
 app.use(unknownEndpoint)
 
 const PORT = process.env.PORT || 3001
